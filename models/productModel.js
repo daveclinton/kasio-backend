@@ -6,8 +6,8 @@ const categorySchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
-    required: true,
+    data: { type: Buffer },
+    contentType: { type: String, required: true },
   },
   subCategories: [
     {
