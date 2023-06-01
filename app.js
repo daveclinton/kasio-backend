@@ -1,6 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
 
+const cors = require("cors");
+
 dotenv.config();
 
 const app = express();
@@ -14,10 +16,11 @@ connectMongo();
 const categoryRoutes = require("./routes/productRoutes");
 
 const { uploadMiddleware } = require("./middleware/uploadMiddleware");
-
+app.use(cors());
+app.use(express.json());
 app.use(uploadMiddleware);
 
-app.use("/api/categories", categoryRoutes);
+app.use("/api", categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
