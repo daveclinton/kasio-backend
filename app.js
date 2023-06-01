@@ -11,13 +11,13 @@ const connectMongo = require("./config/database");
 
 connectMongo();
 
-app.get("/", (req, res) => {
-  res.send("Hello world");
-});
+const categoryRoutes = require("./routes/productRoutes");
 
-app.post("/", (req, res) => {
-  res.send("Here");
-});
+const { uploadMiddleware } = require("./middleware/uploadMiddleware");
+
+app.use(uploadMiddleware);
+
+app.use("/api/categories", categoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`App is listening on port ${PORT}`);
