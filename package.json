@@ -6,12 +6,15 @@
   "author": "daveclinton <clintondavid46@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "dotenv": "^16.1.3",
     "express": "^4.18.2",
     "mongodb": "^5.5.0",
     "mongoose": "^7.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
