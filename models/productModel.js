@@ -18,7 +18,10 @@ const categorySchema = new mongoose.Schema({
           name: { type: String, required: true },
           price: { type: Number, required: true },
           shop: { type: String, required: true },
-          image: { type: String, required: String },
+          image: {
+            data: { type: Buffer },
+            contentType: { type: String, required: true },
+          },
         },
       ],
     },
