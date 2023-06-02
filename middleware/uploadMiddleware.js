@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const allowedFileFormats = ["image/png", "image/jpeg", "image/jpg"]; // Add more file formats if needed
+  const allowedFileFormats = ["image/png", "image/jpeg", "image/jpg"];
 
   if (allowedFileFormats.includes(file.mimetype)) {
     cb(null, true);
@@ -36,13 +36,12 @@ exports.uploadMiddleware = (req, res, next) => {
       return res.status(400).json({ error: err.message });
     }
 
-    // Check if req.file is defined
     if (!req.file) {
       return res.status(400).json({ error: "No file received" });
     }
 
     req.body.image = {
-      data: req.file.buffer, // Assign the image data to req.body.image.data
+      data: req.file.buffer,
       contentType: req.file.mimetype,
     };
     next();

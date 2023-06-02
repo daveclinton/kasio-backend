@@ -69,16 +69,46 @@
           event.preventDefault();
           const formData = new FormData(event.target);
 
+          // Append the form fields to the FormData object
+          formData.append("name", document.getElementById("name").value);
+          formData.append("image", document.getElementById("image").files[0]);
+          formData.append(
+            "subCategories[0][name]",
+            document.getElementById("subcategoryName").value
+          );
+          formData.append(
+            "subCategories[0][products][0][name]",
+            document.getElementById("productName").value
+          );
+          formData.append(
+            "subCategories[0][products][0][brand]",
+            document.getElementById("productBrand").value
+          );
+          formData.append(
+            "subCategories[0][products][0][price]",
+            document.getElementById("productPrice").value
+          );
+          formData.append(
+            "subCategories[0][products][0][shop]",
+            document.getElementById("productShop").value
+          );
+          formData.append(
+            "subCategories[0][products][0][image]",
+            document.getElementById("productImage").files[0]
+          );
+
+          console.log(formData);
+
           try {
             const response = await fetch(
               "http://localhost:3000/api/categories",
               {
-                method: "POST",
+                method: "GET",
                 body: formData,
               }
             );
             const data = await response.json();
-            console.log(data);
+            console.log("Here", data);
             // Handle the response as needed
           } catch (error) {
             console.error(error);

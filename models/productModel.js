@@ -1,81 +1,49 @@
 const mongoose = require("mongoose");
 
-// Custom validator function to check for presence
-function presenceValidator(value) {
-  return value || this.isNew;
-}
-
-const categorySchema = new mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name field is required"],
-      validate: {
-        validator: presenceValidator,
-        message: "Name field cannot be empty",
-      },
+      required: [true, "Product name is required"],
+    },
+    brand: {
+      type: String,
+      required: [true, "Product brand is required"],
+    },
+    price: {
+      type: Number,
+      required: [true, "Product price is required"],
     },
     image: {
-      data: { type: Buffer },
-      contentType: {
-        type: String,
-        required: [true, "Content type is required"],
-        validate: presenceValidator,
-      },
+      type: String,
+      required: [true, "Product image is required"],
     },
-    subCategories: [
-      {
-        name: {
-          type: String,
-          required: [true, "Subcategory name is required"],
-          validate: {
-            validator: presenceValidator,
-            message: "Subcategory name field cannot be empty",
-          },
-        },
-        products: [
-          {
-            brand: {
-              type: String,
-              required: [true, "Product brand is required"],
-              validate: presenceValidator,
-            },
-            name: {
-              type: String,
-              required: [true, "Product name is required"],
-              validate: presenceValidator,
-            },
-            price: {
-              type: Number,
-              required: [true, "Product price is required"],
-              validate: presenceValidator,
-            },
-            shop: {
-              type: String,
-              required: [true, "Shop name is required"],
-              validate: presenceValidator,
-            },
-            image: {
-              data: { type: Buffer },
-              contentType: {
-                type: String,
-                required: [true, "Product image content type is required"],
-                validate: presenceValidator,
-              },
-            },
-          },
-        ],
-      },
-    ],
+    shop: {
+      type: String,
+      required: [true, "Shop name is required"],
+    },
   },
-  { timestamps: true }
+  { _id: false }
 );
 
-// Set required fields to false during updates
-categorySchema.pre("findOneAndUpdate", function (next) {
-  this.options.runValidators = true;
-  this.options.context = "query";
-  next();
+const subcategorySchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Subcategory name is required"],
+  },
+  products: [productSchema],
+});
+
+const categorySchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, "Category name is required"],
+  },
+  image: {
+    type: String,
+    required: [true, "Category image is required"],
+  },
+  subcategories: [subcategorySchema],
 });
 
 const Category = mongoose.model("Category", categorySchema);
