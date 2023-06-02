@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: "Name field is Required",
   },
   image: {
     data: { type: Buffer },
-    contentType: { type: String, required: true },
+    contentType: { type: String, required: "Content type is required" },
   },
   subCategories: [
     {
