@@ -29,6 +29,12 @@ exports.uploadMiddleware = (req, res, next) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
+
+    // Check if req.file is defined
+    if (!req.file) {
+      return res.status(400).json({ error: "No file received" });
+    }
+
     req.body.image = {
       data: req.file.buffer, // Assign the image data to req.body.image.data
       contentType: req.file.mimetype,
