@@ -12,10 +12,11 @@ const connectMongo = require("./config/database");
 connectMongo();
 
 const categoryRoutes = require("./routes/productRoutes");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 
 app.use("/api", categoryRoutes);
 
