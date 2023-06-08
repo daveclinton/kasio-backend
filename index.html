@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>Create Category</h1>
-    <form id="createCategoryForm" enctype="multipart/form-data">
+    <form id="createCategoryForm">
       <label for="name">Category Name:</label>
       <input type="text" id="name" name="name" required /><br /><br />
       <label for="image">Category Image:</label>
@@ -67,26 +67,76 @@
         .getElementById("createCategoryForm")
         .addEventListener("submit", async (event) => {
           event.preventDefault();
-          const form = document.getElementById("createCategoryForm");
-          const formData = new FormData(form);
 
-          console.log(formData);
+          const form = document.getElementById("createCategoryForm");
+          const data = {};
+
+          // Extract form values
+          for (const element of form.elements) {
+            const name = element.name;
+            const value = element.value;
+            if (name) {
+              setNestedValue(data, name, value);
+            }
+          }
+
+          // Handle file inputs separately
+          const imageFile = form.elements["image"].files[0];
+          if (imageFile) {
+            const imageData = await readFileAsBase64(imageFile);
+            setNestedValue(data, "image", imageData);
+          }
+
+          const productImageFile =
+            form.elements["subcategories[0].products[0].image"].files[0];
+          if (productImageFile) {
+            const productImageData = await readFileAsBase64(productImageFile);
+            setNestedValue(
+              data,
+              "subcategories[0].products[0].image",
+              productImageData
+            );
+          }
 
           try {
             const response = await fetch(
               "http://localhost:3000/api/categories",
               {
                 method: "POST",
-                body: formData,
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
               }
             );
-            const data = await response.json();
-            console.log("Here", data);
+            const responseData = await response.json();
+            console.log(responseData);
           } catch (error) {
             console.error(error);
-            // Handle error
           }
         });
+
+      function setNestedValue(obj, key, value) {
+        const keys = key.split(".");
+        const lastKey = keys.pop();
+        let nestedObj = obj;
+        for (const nestedKey of keys) {
+          if (!nestedObj[nestedKey]) {
+            nestedObj[nestedKey] = {};
+          }
+          nestedObj = nestedObj[nestedKey];
+        }
+        nestedObj[lastKey] = value;
+      }
+
+      function readFileAsBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
     </script>
   </body>
 </html>

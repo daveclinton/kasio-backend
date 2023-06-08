@@ -1,13 +1,5 @@
 const mongoose = require("mongoose");
 
-const imageSchema = new mongoose.Schema(
-  {
-    data: Buffer,
-    contentType: String,
-  },
-  { _id: false }
-);
-
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -23,7 +15,7 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product price is required"],
     },
     image: {
-      type: imageSchema,
+      type: String,
       required: [true, "Product image is required"],
     },
     shop: {
@@ -48,7 +40,7 @@ const categorySchema = new mongoose.Schema({
     required: [true, "Category name is required"],
   },
   image: {
-    type: imageSchema,
+    type: String,
     required: [true, "Category image is required"],
   },
   subcategories: [subcategorySchema],

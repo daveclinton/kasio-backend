@@ -1,42 +1,14 @@
 const Category = require("../models/productModel");
-const multer = require("multer");
-
-// Create a multer instance and configure it
-const upload = multer().single("image");
 
 const createCategory = async (req, res) => {
   try {
-    upload(req, res, async (err) => {
-      if (err instanceof multer.MulterError) {
-        return res.status(400).json({ error: err.message });
-      } else if (err) {
-        return res.status(500).json({ error: err.message });
-      }
+    const { name, image, subcategories } = req.body;
 
-      const { name, subcategories } = req.body;
-      const image = req.file;
-
-      console.log("Here", req.body);
-
-      if (!name) {
-        return res.status(400).json({ error: "Category name is required" });
-      }
-      if (!req.file) {
-        return res.status(400).json({ error: "Category image is required" });
-      }
-
-      const category = new Category({
-        name,
-        image,
-        subcategories,
-      });
-
-      const savedCategory = await category.save();
-
-      res.status(201).json(savedCategory);
-    });
+    const category = new Category({ name, image, subcategories });
+    const newCategory = await category.save();
+    res.status(201).json(newCategory);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ error: "Invalid data" });
   }
 };
 
