@@ -15,8 +15,8 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product price is required"],
     },
     image: {
-      type: String,
-      required: [true, "Product image is required"],
+      data: Buffer,
+      contentType: String,
     },
     shop: {
       type: String,

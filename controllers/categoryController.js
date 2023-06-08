@@ -1,14 +1,29 @@
 const Category = require("../models/productModel");
+const formidable = require("formidable");
 
 const createCategory = async (req, res) => {
   try {
-    const { name, image, subcategories } = req.body;
+    const form = formidable({ multiples: true });
 
-    const category = new Category({ name, image, subcategories });
-    const newCategory = await category.save();
-    res.status(201).json(newCategory);
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(400).json({ error: "Invalid data" });
+      }
+
+      const { name, subcategories } = fields;
+      const { image } = files;
+
+      const category = new Category({ name, subcategories, image });
+
+      try {
+        const newCategory = await category.save();
+        res.status(201).json(newCategory);
+      } catch (error) {
+        res.status(400).json({ error: "Failed to save category" });
+      }
+    });
   } catch (error) {
-    res.status(400).json({ error: "Invalid data" });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
